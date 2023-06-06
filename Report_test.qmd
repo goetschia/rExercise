@@ -1,0 +1,61 @@
+---
+title: "Second wave of COVID-19 in Switzerland"
+author: "Aljoscha Goetschi"
+date: "`r date()`"
+format: 
+  html:
+      toc: true
+      code-fold: show
+      code-tools: true
+      df-print: paged
+      embed-resources: true
+---
+```{r}
+#| output: false
+# load libraries
+library(here)
+library(tidyverse)
+library(lubridate)
+library(unibeCols)
+```
+
+
+
+## Introduction
+
+Here you can provide some introductory information. 
+
+## Data
+
+Load data from somewhere. And then perform some cleaning.
+
+```{r}
+#| output: false
+# Reading my data
+dat <- read_csv(here("C:/Users/aljos/OneDrive/Dokumente/PhD/Intro to R/rExercise/ebola.csv"))
+```
+```{r}
+#process data
+dat <- dat %>% arrange(Date)
+dat_plot <- dat %>% select(c(Country, Date, Cum_conf_cases))
+dat_plot <- dat_plot %>% filter((Date <= as.Date("2015-03-31")) & (Country == "Liberia" | Country == "Sierra Leone" | Country == "Nigeria"))
+
+dat_plot
+```
+
+## Results
+
+```{r}
+#| label: fig-cases
+#| fig-cap: "Laboratory confirmed cases"
+#| fig-width: 8
+#| fig-height: 4
+ggplot(dat_plot, aes(x = Date, y = Cum_conf_cases, colour = Country, fill = Country)) + geom_point( alpha = .7,  shape = 20, size=1.5, stroke = 1.5) +
+    xlab(label = "Time") + ylab(label = "# of confirmed cases") + ggtitle(label = "Confirmed ebola cases in three countries") +
+  scale_color_manual(name = "Country", breaks = c("Liberia", "Nigeria", "Sierra Leone"), values = c(unibePastelS()[1], unibeIceS()[1], unibeGreenS()[1])) +
+  scale_fill_manual(name = "Country", breaks = c("Liberia", "Nigeria", "Sierra Leone"), values = c(unibePastelS()[1], unibeIceS()[1], unibeGreenS()[1])) +
+  scale_x_date(breaks =  as.Date(c("2014-08-29", "2014-10-01", "2014-12-01", "2015-01-01", "2015-04-01")),
+               labels = c("29 August", "01 October", "01 December", "01 January", "01 April")) + theme_bw() + facet_grid(cols = vars(Country))
+
+```
+
