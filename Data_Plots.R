@@ -55,7 +55,7 @@ p_col <- ggplot(dat_plot, aes(x = Date, y = Cum_conf_cases, fill = Country, colo
 p_grid <- plot_grid(plotlist = list(p_point, p_line, p_col), labels = c("V1", "V2", "V3"),
                     label_size = 12, nrow = 2)
 
-
+print(p_grid)
 
 
 
